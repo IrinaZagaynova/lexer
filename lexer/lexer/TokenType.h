@@ -2,11 +2,12 @@
 
 enum class TokenType
 {
-	Id,
+	Identifier,
 	Keyword,
 	Int,
-	Double,
 	Float,
+	Binary,
+	Hex,
 	Char,
 	String,
 	Array,
@@ -18,8 +19,7 @@ enum class TokenType
 	Assignment,
 	Separator,
 	Bracket,
-	Binary,
-	Octal,
-	Decimal,
+	LogicalOperator,
+	NegationOperator,
 	Error
 };
