@@ -6,6 +6,6 @@ enum class State
 	Quotes,
 	Apostrophes,
 	MultiLineComment,
-	SingleLine—omment,
+	SingleLineComment,
 	SquareBrackets
 };

@@ -65,7 +65,7 @@ void CLexer::CheckLineEnd()
 			AddTokenByCurrentLexeme();
 		}
 
-		if (m_currentState == State::SingleLine—omment)
+		if (m_currentState == State::SingleLineComment)
 		{
 			m_currentState = State::Default;
 		}
@@ -226,7 +226,7 @@ optional<TokenType> CLexer::GetTokenTypeByChar(char ch)
 		else if (nextChar == '/')
 		{
 			AddTokenByCurrentLexeme();
-			m_currentState = State::SingleLine—omment;
+			m_currentState = State::SingleLineComment;
 		}
 		else
 		{
