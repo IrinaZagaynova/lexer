@@ -36,6 +36,7 @@ private:
 	bool IsIgnoredSeparator(char ch) const;
 	bool IsCurrentLexemeKeyword() const;
 	bool IsCurrentLexemeBinaryNumber() const;
+	bool IsCurrentLexemeOctalNumber() const;
 	bool IsCurrentLexemeHexNumber() const;
 	bool IsCurrentLexemeInt() const;
 	bool IsCurrentLexemeFloat() const;

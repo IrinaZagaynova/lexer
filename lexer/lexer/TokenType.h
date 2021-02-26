@@ -7,6 +7,7 @@ enum class TokenType
 	Int,
 	Float,
 	Binary,
+	Octal,
 	Hex,
 	Char,
 	String,

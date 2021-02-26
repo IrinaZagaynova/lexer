@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
 		}
 
 		CLexer lexer(input);
-		lexer.PrintTokens(std::cout);
+		lexer.PrintTokens(output);
 	}
 	catch (std::exception& e)
 	{

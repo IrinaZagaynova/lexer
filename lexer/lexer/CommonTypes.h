@@ -49,6 +49,7 @@ const std::map<TokenType, std::string> TOKEN_NAMES
 	{ TokenType::Int, "Int" },
 	{ TokenType::Float, "Float" },
 	{ TokenType::Binary, "Binary" },
+	{ TokenType::Octal, "Octal" },
 	{ TokenType::Hex, "Hex" },
 	{ TokenType::Char, "Char" },
 	{ TokenType::String, "String" },

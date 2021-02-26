@@ -264,6 +264,11 @@ optional<TokenType> CLexer::GetTokenTypeByCurrentLexeme()
 		return TokenType::Binary;
 	}
 
+	if (IsCurrentLexemeOctalNumber())
+	{
+		return TokenType::Octal;
+	}
+
 	if (IsCurrentLexemeHexNumber())
 	{
 		return TokenType::Hex;
@@ -336,6 +341,11 @@ bool CLexer::IsCurrentLexemeKeyword() const
 bool CLexer::IsCurrentLexemeBinaryNumber() const
 {
 	return regex_match(m_currentLexeme, regex("[-+]?0b[01]+"));
+}
+
+bool CLexer::IsCurrentLexemeOctalNumber() const
+{
+	return regex_match(m_currentLexeme, regex("[-+]?0o[0-7]+"));
 }
 
 bool CLexer::IsCurrentLexemeHexNumber() const
