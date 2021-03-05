@@ -46,6 +46,8 @@ private:
 	bool IsQuotesStart(char ch);
 	bool IsApostrophesStart(char ch);
 	bool IsSquareBracketsStart(char ch);
+	bool IsSingleLineCommentStart(char ch);
+	bool IsMultiLineCommentStart(char ch);
 
 private:
 	std::istream& m_istrm;

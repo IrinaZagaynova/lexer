@@ -83,19 +83,19 @@ void CLexer::CheckLineEnd()
 
 void CLexer::ProcessCharWhenDefaultState(char ch)
 {
+	bool isCommentStart = IsSingleLineCommentStart(ch) || IsMultiLineCommentStart(ch);
+
 	if (IsQuotesStart(ch) || IsApostrophesStart(ch) || IsSquareBracketsStart(ch))
 	{
 		AddTokenByCurrentLexeme();
-		m_currentLexeme.push_back(ch);
+		if (!isCommentStart)
+		{
+			m_currentLexeme.push_back(ch);
+		}
 		return;
 	}
 
 	auto tokenTypeByChar = GetTokenTypeByChar(ch);
-
-	if (m_currentState != State::Default)
-	{
-		return;
-	}
 
 	if (tokenTypeByChar)
 	{
@@ -200,38 +200,16 @@ optional<TokenType> CLexer::GetTokenTypeByChar(char ch)
 		return TokenType::NegationOperator;
 	}
 
-	if (ch == '+')
+	switch (ch)
 	{
+	case '+':
 		return TokenType::Addition;
-	}
-
-	if (ch == '-')
-	{
+	case '-':
 		return TokenType::Subtraction;
-	}
-
-	if (ch == '*')
-	{
+	case '*':
 		return TokenType::Multiplication;
-	}
-
-	if (ch == '/')
-	{
-		char nextChar = m_istrm.peek();
-		if (nextChar == '*')
-		{
-			AddTokenByCurrentLexeme();
-			m_currentState = State::MultiLineComment;
-		}
-		else if (nextChar == '/')
-		{
-			AddTokenByCurrentLexeme();
-			m_currentState = State::SingleLineComment;
-		}
-		else
-		{
-			return TokenType::Division;
-		}
+	case '/':
+		return TokenType::Division;
 	}
 
 	return nullopt;
@@ -403,6 +381,26 @@ bool CLexer::IsSquareBracketsStart(char ch)
 	if (m_currentState == State::Default && ch == '[')
 	{
 		m_currentState = State::SquareBrackets;
+		return true;
+	}
+	return false;
+}
+
+bool CLexer::IsSingleLineCommentStart(char ch)
+{
+	if (ch == '/' && m_istrm.peek() == '/')
+	{
+		m_currentState = State::SingleLineComment;
+		return true;
+	}
+	return false;
+}
+
+bool CLexer::IsMultiLineCommentStart(char ch)
+{
+	if (ch == '/' && m_istrm.peek() == '*')
+	{
+		m_currentState = State::MultiLineComment;
 		return true;
 	}
 	return false;

@@ -1,0 +1,34 @@
+int main(string[] args)
+{
+	int array[10];
+	int bin = 0b0101010101;
+	int oct = 0o7456;
+
+	int f = 5 / 0xA4B5EF; //inline comment
+	if (f == 7)
+	{
+		f = -3;
+	}/*multi
+	line 
+	comment */
+
+	bool flag = false;
+
+	if (a != 4 || b <= 4 && true || !flag)
+	{
+		bool b = 3 <= 3;
+	}
+
+	float f = 0.5-0.5E;
+
+	char ch0 = 'tt'tt';
+	char ch = '';
+	char ch1 = '"';
+	char ch2 = '\\'';
+	char ch3 = '\\\r';
+
+	string s = "dhdh\"dhssss";
+	string s1 = "sss\"sssss'sdsdds\\";
+
+	print(ch);
+}

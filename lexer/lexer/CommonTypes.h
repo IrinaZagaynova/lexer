@@ -8,7 +8,6 @@ const std::set<std::string> KEYWORDS
 	"main",
 	"void",
 	"int",
-	"double",
 	"float",
 	"char",
 	"string",
