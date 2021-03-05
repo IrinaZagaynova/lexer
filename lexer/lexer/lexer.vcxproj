@@ -154,8 +154,14 @@
     <ClInclude Include="TokenType.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="id-output.txt" />
+    <Text Include="id.txt" />
     <Text Include="input.txt" />
+    <Text Include="num.txt" />
     <Text Include="output.txt" />
+    <Text Include="string.txt" />
+    <Text Include="test-output.txt" />
+    <Text Include="test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

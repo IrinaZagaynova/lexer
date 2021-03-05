@@ -63,5 +63,6 @@ const std::map<TokenType, std::string> TOKEN_NAMES
 	{ TokenType::Bracket, "Bracket" },
 	{ TokenType::LogicalOperator, "LogicalOperator" },
 	{ TokenType::NegationOperator, "NegationOperator" },
-	{ TokenType::Error, "Error" }
+	{ TokenType::Error, "Error" },
+	{ TokenType::EOFL, "EOFL"}
 };

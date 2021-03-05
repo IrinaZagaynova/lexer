@@ -22,5 +22,6 @@ enum class TokenType
 	Bracket,
 	LogicalOperator,
 	NegationOperator,
-	Error
+	Error,
+	EOFL
 };

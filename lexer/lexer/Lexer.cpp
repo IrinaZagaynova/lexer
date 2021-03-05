@@ -1,6 +1,8 @@
 #include "Lexer.h"
 #include "CommonTypes.h"
 #include <regex>
+#include <ctype.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -8,6 +10,10 @@ CLexer::CLexer(istream& istrm)
 	: m_istrm(istrm)
 {
 	ProcessStream();
+	if (m_tokens.empty())
+	{
+		m_tokens.push_back({ TokenType::EOFL, "", 0, 0});
+	}
 }
 
 vector<Token> CLexer::GetTokens() const
@@ -85,9 +91,9 @@ void CLexer::ProcessCharWhenDefaultState(char ch)
 {
 	bool isCommentStart = IsSingleLineCommentStart(ch) || IsMultiLineCommentStart(ch);
 
-	if (IsQuotesStart(ch) || IsApostrophesStart(ch) || IsSquareBracketsStart(ch))
+	if (IsQuotesStart(ch) || IsApostrophesStart(ch) || IsSquareBracketsStart(ch) || isCommentStart)
 	{
-		AddTokenByCurrentLexeme();
+		FlushLexeme();
 		if (!isCommentStart)
 		{
 			m_currentLexeme.push_back(ch);
@@ -99,7 +105,7 @@ void CLexer::ProcessCharWhenDefaultState(char ch)
 
 	if (tokenTypeByChar)
 	{
-		AddTokenByCurrentLexeme();
+		FlushLexeme();
 		if (!IsIgnoredSeparator(ch))
 		{
 			m_currentLexeme.push_back(ch);
@@ -281,7 +287,7 @@ optional<TokenType> CLexer::GetTokenTypeByCurrentLexeme()
 
 void CLexer::AddToken(TokenType type)
 {
-	m_tokens.push_back({ type, m_currentLexeme, m_lineNumber, m_columnNumber - m_currentLexeme.length() - 1});
+	m_tokens.push_back({ type, m_currentLexeme, m_lineNumber, m_columnNumber - m_currentLexeme.length() });
 	m_currentLexeme.clear();
 }
 
@@ -294,6 +300,16 @@ bool CLexer::AddTokenByCurrentLexeme()
 		return true;
 	}
 	return false;
+}
+
+void CLexer::FlushLexeme()
+{
+	auto tokenType = GetTokenTypeByCurrentLexeme();
+	if (tokenType)
+	{
+		m_tokens.push_back({ *tokenType, m_currentLexeme, m_lineNumber, m_columnNumber - m_currentLexeme.length() - 1});
+		m_currentLexeme.clear();
+	}
 }
 
 bool CLexer::IsSeparator(char ch) const
@@ -318,22 +334,22 @@ bool CLexer::IsCurrentLexemeKeyword() const
 
 bool CLexer::IsCurrentLexemeBinaryNumber() const
 {
-	return regex_match(m_currentLexeme, regex("[-+]?0b[01]+"));
+	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0b[01]+"));
 }
 
 bool CLexer::IsCurrentLexemeOctalNumber() const
 {
-	return regex_match(m_currentLexeme, regex("[-+]?0o[0-7]+"));
+	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0o[0-7]+"));
 }
 
 bool CLexer::IsCurrentLexemeHexNumber() const
 {
-	return regex_match(m_currentLexeme, regex("[-+]?0x[0-9A-F]+"));
+	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0x[0-9A-F]+"));
 }
 
 bool CLexer::IsCurrentLexemeInt() const
 {
-	return regex_match(m_currentLexeme, regex("[-+]?[0-9]+"));
+	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?[0-9]+"));
 }
 
 bool CLexer::IsCurrentLexemeFloat() const
@@ -343,6 +359,10 @@ bool CLexer::IsCurrentLexemeFloat() const
 
 bool CLexer::IsCurrentLexemeIdentifier() const
 {
+	if (m_currentLexeme.size() > 64)
+	{
+		return false;
+	}
 	return regex_match(m_currentLexeme, regex("[a-zA-Z_][0-9a-zA-Z_]*"));
 }
 
@@ -404,4 +424,9 @@ bool CLexer::IsMultiLineCommentStart(char ch)
 		return true;
 	}
 	return false;
+}
+
+bool CLexer::IsCorrectIntLexemeSize() const
+{
+	return m_currentLexeme.size() > 11;
 }

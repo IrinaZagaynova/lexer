@@ -30,6 +30,7 @@ private:
 
 	void AddToken(TokenType type);
 	bool AddTokenByCurrentLexeme();
+	void FlushLexeme();
 
 	bool IsSeparator(char ch) const;
 	bool IsBracket(char ch) const;
@@ -48,6 +49,7 @@ private:
 	bool IsSquareBracketsStart(char ch);
 	bool IsSingleLineCommentStart(char ch);
 	bool IsMultiLineCommentStart(char ch);
+	bool IsCorrectIntLexemeSize() const;
 
 private:
 	std::istream& m_istrm;
