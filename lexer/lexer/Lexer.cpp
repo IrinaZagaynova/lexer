@@ -193,7 +193,7 @@ optional<TokenType> CLexer::GetTokenTypeByChar(char ch)
 
 	if (ch == '=' && m_istrm.peek() != '=' && m_currentLexeme != "=" && m_currentLexeme != "<" && m_currentLexeme != ">" && m_currentLexeme != "!")
 	{
-		return TokenType::Multiplication;
+		return TokenType::Assignment;
 	}
 
 	if ((ch == '>' || ch == '<') && m_istrm.peek() != '=')
@@ -344,7 +344,7 @@ bool CLexer::IsCurrentLexemeOctalNumber() const
 
 bool CLexer::IsCurrentLexemeHexNumber() const
 {
-	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0x[0-9A-F]+"));
+	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0x[0-9A-Fa-f]+"));
 }
 
 bool CLexer::IsCurrentLexemeInt() const
@@ -354,7 +354,7 @@ bool CLexer::IsCurrentLexemeInt() const
 
 bool CLexer::IsCurrentLexemeFloat() const
 {
-	return regex_match(m_currentLexeme, regex("[+-]?([0-9]*[.])?[0-9]+"));
+	return regex_match(m_currentLexeme, regex("[+-]?([0-9]*[.])?[0-9]*"));
 }
 
 bool CLexer::IsCurrentLexemeIdentifier() const
@@ -428,5 +428,5 @@ bool CLexer::IsMultiLineCommentStart(char ch)
 
 bool CLexer::IsCorrectIntLexemeSize() const
 {
-	return m_currentLexeme.size() > 11;
+	return m_currentLexeme.size() < 11;
 }

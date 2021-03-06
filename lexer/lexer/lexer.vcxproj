@@ -154,6 +154,8 @@
     <ClInclude Include="TokenType.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="fix-mistakes-output.txt" />
+    <Text Include="fix-mistakes.txt" />
     <Text Include="id-output.txt" />
     <Text Include="id.txt" />
     <Text Include="input.txt" />

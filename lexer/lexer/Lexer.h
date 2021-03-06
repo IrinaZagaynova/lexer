@@ -55,7 +55,7 @@ private:
 	std::istream& m_istrm;
 	std::string m_currentLexeme;
 	size_t m_lineNumber = 1;
-	size_t m_columnNumber = 0;
+	size_t m_columnNumber = 1;
 	State m_currentState = State::Default;
 	bool isError = false;
 	std::vector<Token> m_tokens;
