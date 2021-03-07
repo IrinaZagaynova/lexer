@@ -1,4 +1,0 @@
-"string"
-'abc'
-"strin'
-'a"
