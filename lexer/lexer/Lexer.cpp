@@ -38,6 +38,7 @@ void CLexer::ProcessStream()
 		ProcessChar(ch);
 		CheckLineEnd();
 	}
+	FlushLexeme();
 }
 
 void CLexer::ProcessChar(char ch)
@@ -354,7 +355,7 @@ bool CLexer::IsCurrentLexemeInt() const
 
 bool CLexer::IsCurrentLexemeFloat() const
 {
-	return regex_match(m_currentLexeme, regex("[+-]?([0-9]*[.])?[0-9]*"));
+	return regex_match(m_currentLexeme, regex("[+-]?([0-9]*[.])?[0-9]*")) && (m_currentLexeme.size() != 1 || m_currentLexeme[0] != '.');
 }
 
 bool CLexer::IsCurrentLexemeIdentifier() const
