@@ -360,11 +360,7 @@ bool CLexer::IsCurrentLexemeFloat() const
 
 bool CLexer::IsCurrentLexemeIdentifier() const
 {
-	if (m_currentLexeme.size() > 64)
-	{
-		return false;
-	}
-	return regex_match(m_currentLexeme, regex("[a-zA-Z_][0-9a-zA-Z_]*"));
+	return regex_match(m_currentLexeme, regex("[a-zA-Z_][0-9a-zA-Z_]*")) && m_currentLexeme.size() < 64;
 }
 
 bool CLexer::IsCurrentLexemeComparison() const
