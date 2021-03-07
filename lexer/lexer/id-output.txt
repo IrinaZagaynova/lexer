@@ -1,6 +1,0 @@
-1 18446744073709551615 a Identifier
-2 0 a1 Identifier
-3 0 _a Identifier
-4 0 _1 Identifier
-5 0 1_ Error
-6 0 a_ Identifier
