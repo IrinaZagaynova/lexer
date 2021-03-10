@@ -6,6 +6,9 @@
 
 using namespace std;
 
+const int MAX_CHARS_NUMBER_IN_INT = 11;
+const int MAX_CHARS_NUMBER_IN_IDENTIFIER = 64;
+
 CLexer::CLexer(istream& istrm)
 	: m_istrm(istrm)
 {
@@ -60,6 +63,9 @@ void CLexer::ProcessChar(char ch)
 	case State::SquareBrackets:
 		ProcessCharInSquareBrackets(ch);
 		break;
+	case State::ExponentialNotation:
+		ProcessCharInExponentialNotation(ch);
+		break;
 	}
 }
 
@@ -99,6 +105,11 @@ void CLexer::ProcessCharWhenDefaultState(char ch)
 		{
 			m_currentLexeme.push_back(ch);
 		}
+		return;
+	}
+
+	if (IsPartOfExponentialNotation(ch))
+	{
 		return;
 	}
 
@@ -177,6 +188,35 @@ void CLexer::ProcessCharInSquareBrackets(char ch)
 	else if (!isdigit(ch))
 	{
 		isError = true;
+	}
+}
+
+void CLexer::ProcessCharInExponentialNotation(char ch)
+{
+	m_currentLexeme.push_back(ch);
+
+	bool isPlusOrMinus = (ch == '+' || ch == '-');
+	bool isCourrectSize = (m_currentLexeme.size() <= m_ePosition + 3);
+
+	if (m_currentLexeme.size() == m_ePosition + 1)
+	{
+		if (!isPlusOrMinus)
+		{
+			AddToken(TokenType::Error);
+			m_currentState = State::Default;
+		}
+	}
+	else if (!isdigit(ch) || !isCourrectSize)
+	{
+		AddToken(TokenType::Error);
+		m_currentState = State::Default;
+	}
+
+	char nextChar = m_istrm.peek();
+	if ((IsSeparator(nextChar) || IsBracket(nextChar) || GetTokenTypeByChar(nextChar) || nextChar == EOF) && isCourrectSize)
+	{
+		AddToken(TokenType::Float);
+		m_currentState = State::Default;
 	}
 }
 
@@ -335,32 +375,32 @@ bool CLexer::IsCurrentLexemeKeyword() const
 
 bool CLexer::IsCurrentLexemeBinaryNumber() const
 {
-	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0b[01]+"));
+	return m_currentLexeme.size() < MAX_CHARS_NUMBER_IN_INT && regex_match(m_currentLexeme, regex("[-+]?0b[01]+"));
 }
 
 bool CLexer::IsCurrentLexemeOctalNumber() const
 {
-	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0o[0-7]+"));
+	return m_currentLexeme.size() < MAX_CHARS_NUMBER_IN_INT && regex_match(m_currentLexeme, regex("[-+]?0o[0-7]+"));
 }
 
 bool CLexer::IsCurrentLexemeHexNumber() const
 {
-	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?0x[0-9A-Fa-f]+"));
+	return m_currentLexeme.size() < MAX_CHARS_NUMBER_IN_INT && regex_match(m_currentLexeme, regex("[-+]?0x[0-9A-Fa-f]+"));
 }
 
 bool CLexer::IsCurrentLexemeInt() const
 {
-	return IsCorrectIntLexemeSize() && regex_match(m_currentLexeme, regex("[-+]?[0-9]+"));
+	return m_currentLexeme.size() < MAX_CHARS_NUMBER_IN_INT && regex_match(m_currentLexeme, regex("[-+]?[0-9]+"));
 }
 
 bool CLexer::IsCurrentLexemeFloat() const
 {
-	return regex_match(m_currentLexeme, regex("[+-]?([0-9]*[.])?[0-9]*")) && (m_currentLexeme.size() != 1 || m_currentLexeme[0] != '.');
+	return (m_currentLexeme.size() != 1 || m_currentLexeme[0] != '.') && regex_match(m_currentLexeme, regex("[+-]?([0-9]*[.])?[0-9]*"));
 }
 
 bool CLexer::IsCurrentLexemeIdentifier() const
 {
-	return regex_match(m_currentLexeme, regex("[a-zA-Z_][0-9a-zA-Z_]*")) && m_currentLexeme.size() < 64;
+	return m_currentLexeme.size() < MAX_CHARS_NUMBER_IN_IDENTIFIER && regex_match(m_currentLexeme, regex("[a-zA-Z_][0-9a-zA-Z_]*"));
 }
 
 bool CLexer::IsCurrentLexemeComparison() const
@@ -423,7 +463,15 @@ bool CLexer::IsMultiLineCommentStart(char ch)
 	return false;
 }
 
-bool CLexer::IsCorrectIntLexemeSize() const
+bool CLexer::IsPartOfExponentialNotation(char ch)
 {
-	return m_currentLexeme.size() < 11;
+	if (ch == 'e' || ch == 'E' && (IsCurrentLexemeFloat() || m_currentLexeme == "."))
+	{
+		m_currentState = State::ExponentialNotation;
+		m_ePosition = m_currentLexeme.size() + 1;
+		m_currentLexeme.push_back(ch);
+		return true;
+	}
+	return false;
 }
+

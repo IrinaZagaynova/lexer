@@ -7,5 +7,6 @@ enum class State
 	Apostrophes,
 	MultiLineComment,
 	SingleLineComment,
-	SquareBrackets
+	SquareBrackets,
+	ExponentialNotation
 };

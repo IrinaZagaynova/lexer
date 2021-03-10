@@ -24,6 +24,7 @@ private:
 	void ProcessCharInQuotes(char ch);
 	void ProcessCharInApostrophes(char ch);
 	void ProcessCharInSquareBrackets(char ch);
+	void ProcessCharInExponentialNotation(char ch);
 
 	std::optional<TokenType> GetTokenTypeByChar(char ch);
 	std::optional<TokenType> GetTokenTypeByCurrentLexeme();
@@ -49,7 +50,7 @@ private:
 	bool IsSquareBracketsStart(char ch);
 	bool IsSingleLineCommentStart(char ch);
 	bool IsMultiLineCommentStart(char ch);
-	bool IsCorrectIntLexemeSize() const;
+	bool IsPartOfExponentialNotation(char ch);
 
 private:
 	std::istream& m_istrm;
@@ -59,4 +60,5 @@ private:
 	State m_currentState = State::Default;
 	bool isError = false;
 	std::vector<Token> m_tokens;
+	size_t m_ePosition = 0;
 };

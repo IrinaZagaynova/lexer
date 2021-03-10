@@ -42,13 +42,7 @@
   <ItemGroup>
     <Text Include="input.txt" />
     <Text Include="output.txt" />
-    <Text Include="id.txt" />
-    <Text Include="num.txt" />
-    <Text Include="string.txt" />
-    <Text Include="id-output.txt" />
     <Text Include="test.txt" />
     <Text Include="test-output.txt" />
-    <Text Include="fix-mistakes.txt" />
-    <Text Include="fix-mistakes-output.txt" />
   </ItemGroup>
 </Project>
