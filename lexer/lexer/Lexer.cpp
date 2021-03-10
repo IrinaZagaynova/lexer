@@ -465,7 +465,7 @@ bool CLexer::IsMultiLineCommentStart(char ch)
 
 bool CLexer::IsPartOfExponentialNotation(char ch)
 {
-	if (ch == 'e' || ch == 'E' && (IsCurrentLexemeFloat() || m_currentLexeme == "."))
+	if ((ch == 'e' || ch == 'E') && !IsCurrentLexemeInt() && (IsCurrentLexemeFloat() || m_currentLexeme == "."))
 	{
 		m_currentState = State::ExponentialNotation;
 		m_ePosition = m_currentLexeme.size() + 1;
