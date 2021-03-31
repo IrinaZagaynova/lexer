@@ -4,7 +4,8 @@
 2 4 31 Int
 3 1 .5e+89 Float
 4 1 .e-10 Float
-5 1 7.7e+7s Error
+5 1 7.7e+7A Error
+5 8  Float
 6 1 7.1e-101 Error
 7 1 a Identifier
 7 2 = Assignment
