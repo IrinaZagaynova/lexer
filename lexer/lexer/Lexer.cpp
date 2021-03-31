@@ -204,12 +204,14 @@ void CLexer::ProcessCharInExponentialNotation(char ch)
 		{
 			AddToken(TokenType::Error);
 			m_currentState = State::Default;
+			return;
 		}
 	}
 	else if (!isdigit(ch) || !isCourrectSize)
 	{
 		AddToken(TokenType::Error);
 		m_currentState = State::Default;
+		return;
 	}
 
 	char nextChar = m_istrm.peek();
